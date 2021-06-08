@@ -216,6 +216,10 @@ class HGData_: ## controls a single h5groups
         for i in self.hdf5:
             data[int(i)] = self.hdf5[i][:]
         return data
+
+    def __iter__(self):
+        for i in self.hdf5:
+            yield i
     
     def __getitem__(self, value):
         if isinstance(value, int):
@@ -240,7 +244,7 @@ class HGData: ## data + time is consist of whole dataset
             self.hdf5 = h5py.File(obj, self.mode)
             self._standalone = True
 
-        
+        self.name = self.hdf5.name[1:]
         self.data = HGData_(self.hdf5['hyperedges'])
         self.has_time = False
         if self.hdf5.get('time',False):
@@ -286,7 +290,20 @@ class HGData: ## data + time is consist of whole dataset
             self._Graph.add_nodes_from([(node, {'label' : self.node_labels[node]}) for node in self.node_labels])
         return self._Graph
 
-        
+    def __iter__(self):
+        for i in self.data:
+            yield i
+
+    def __call__(self, data = False, time = False):
+        for node in self.data:
+            res = int(node)
+            if data or time:
+                res = [int(node)]
+            if data:
+                res.append(self.data[node][:])
+            if time:
+                res.append(self.time[node][:])
+            yield res
 
     def __getitem__(self, value):
         if isinstance(value, int) or isinstance(value, tuple):
@@ -309,6 +326,10 @@ class HGDataset:
             print(groups.replace('-','_'))
         return
 
+    def __iter__(self):
+        for datum in self.hdf5:
+            yield getattr(self, datum.replace('-','_'))
+
     @classmethod
     def from_github(cls, path, output_name = "HGDatasets.hdf5", readonly = True):
         get_github_dataset(path, True, False, path)
@@ -322,7 +343,15 @@ class HGDataset:
         if not os.path.exists(os.path.join(path, 'HGDataset.hdf5')):
             download_file_from_google_drive('1DDGvonWKGQ8LIB22lKp2z511pymcXktr', filename)
         return cls(filename, readonly)
-        
+    
+    def __getitem__(self, value):
+        data_list = [data.replace('-','_') for data in self.hdf5]
+        for data in data_list:
+            if data.startswith(value):
+                print(data, " is found.")
+                return getattr(self, data)
+        raise ValueError('No dataset matched.')
+                
 
     def close(self):
         self.hdf5.close()
