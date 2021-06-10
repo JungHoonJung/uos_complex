@@ -1,6 +1,10 @@
-pip : 
-
-    sphinx
-    sphinx_bootstrap_theme
-    nbsphinx
-    recommonmark
+numpy
+matplotlib
+tqdm
+pandas
+networkx
+h5py
+sphinx
+pydata_sphinx_theme
+nbsphinx
+recommonmark
