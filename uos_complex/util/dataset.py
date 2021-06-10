@@ -50,6 +50,8 @@ def unzipping(path):
                 with open( os.path.splitext(os.path.join(path, file))[0],'w', encoding='utf8') as g:
                     g.write(f.read().decode('utf8'))
 
+def yungi():
+    pass
 
 def get_github_dataset(path ='.', git_clone = True, unzip = False,  make_hdf5= ''):
     '''get hypergraph dataset of some papers through github.
