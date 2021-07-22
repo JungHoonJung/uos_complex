@@ -83,6 +83,7 @@ def edge_weight_percolation(network : nx.Graph, weight_name : str, connecting = 
         merged = False
         if strong:
             ## checking strongly connencted  #################################### YG code here, if merge occurs, then merged = True
+            print("Hello, world")
             pass
         
         else:
