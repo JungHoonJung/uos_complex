@@ -4,14 +4,15 @@ import matplotlib.pyplot as plt
 
 
 
-def edge_weight_percolation(network : nx.Graph, weight_name : str, connecting = 'strong') -> np.ndarray:
+def edge_weight_percolation(network : nx.Graph, order, connecting = 'strong') -> np.ndarray:
     '''Percolation with given weight on given network.
     Parameters
     ---------------
     network : `nx.Graph` (or `nx.DiGraph`)
         The network which will be percolated.
-    weight_name : `str`
-        The string name of the weight to be used.
+    order : `str` or `numpy.ndarray`
+        The string name of the weight to be used. If type of `order` is numpy array, 
+        percolation will be performed with the same order.
 
     Return
     ---------------
@@ -82,15 +83,13 @@ def edge_weight_percolation(network : nx.Graph, weight_name : str, connecting = 
 
         merged = False
         if strong:
-            ## checking strongly connencted  #################################### YG code here, if merge occurs, then merged = True
-            pass
-        
+            if isinstance(percolnet[end_node].get(st_node), dict):
+                merged = True
         else:
-            ## checking weakly connencted    #################################### YG code here, if merge occurs, then merged = True
-            pass
-        
-        if merged and cl1 != cl2:
-            percolation.append([weight, st_node, end_node, cl1.head.data, cl2.head.data])
+            merged = True
+            
+        if merged and cl1.leader().data != cl2.leader().data:
+            percolation.append([weight, st_node, end_node, cl1.leader().data, cl2.leader().data])
             cl1.merge(cl2)
         else:
             percolation.append([weight, st_node, end_node, -1, -1])
