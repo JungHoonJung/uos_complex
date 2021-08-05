@@ -283,13 +283,18 @@ class HGData: ## data + time is consist of whole dataset
     def get_all_data(self):
         return self.data.get_all_data() if not self.has_time else self.data.get_all_data(), self.time.get_all_data() 
     
-    @property
-    def network(self):
-        edges = self.data[2]
-        self._Graph = nx.from_edgelist(edges)
+    def get_clique_network(self):
+        Graph = nx.Graph()
+        for k in self.data:
+            k = int(k)
+            if k <2: continue ## ignore length 1 edge.  (a.k.a. vertex)
+            for i in range(k):
+                for j in range(k):
+                    if i<=j:continue
+                    Graph.add_edges_from(self.data[k][:,[i,j]])
         if self.node_labels is not None:
-            self._Graph.add_nodes_from([(node, {'label' : self.node_labels[node]}) for node in self.node_labels])
-        return self._Graph
+            Graph.add_nodes_from([(node, {'label' : self.node_labels[node]}) for node in self.node_labels])
+        return Graph
 
     def __iter__(self):
         for i in self.data:
@@ -345,13 +350,18 @@ class HGData: ## data + time is consist of whole dataset
                             break
                     if nfacet:
                         break
+                if not facet and not nfacet:
+                    for node in simp: 
+                        faces = facets[node]
+                        faces.append(simpset)
+                        facets[node] = faces
         print(self.name)
         return facets
 
     def get_clique_complex(self):    
         facets = {}
         simps = set()
-        for j in tqdm(nx.find_cliques(self.network)):
+        for j in tqdm(nx.find_cliques(self.get_clique_network())):
             simp = tuple(sorted(j))
             simpset = set(simp)
             if simp in simps:  #overlap check
@@ -373,6 +383,11 @@ class HGData: ## data + time is consist of whole dataset
                         break
                 if nfacet:
                     break
+            if not facet and not nfacet:
+                for node in simp: 
+                    faces = facets[node]
+                    faces.append(simpset)
+                    facets[node] = faces
         return facets
 
 class HGDataset: 
