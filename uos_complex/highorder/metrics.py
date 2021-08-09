@@ -114,6 +114,27 @@ def FF_corr(facet_dict, scatter = True):
     return corr, ff_pair
 
     
+def simplicial_degree(facet_dict, loglog = False):
+    facets  = facet_dict
+    degrees = np.array([len(facets[f]) for f in facets])
+    plt.hist(degrees, bins = np.arange(degrees.min(), degrees.max()+1), density = True)
+    plt.title('simplicial degree')
+    if loglog:
+        plt.xscale('log')
+        plt.yscale('log')
 
-    
+def facet_size_dist(facet_dict):
+    facets = facet_dict
+    sizes =[]
+    unique_facet = set()
+    for f in facets:
+        for sets in facets[f]:
+            unique_facet.add(tuple(sets))
+    for f in unique_facet:
+        sizes.append(len(f))
+    sizes = np.array(sizes)
+    plt.hist(sizes, bins = np.arange(sizes.min(), sizes.max()+1), density=True)
+    plt.title('facet size dist')
+
+
 
