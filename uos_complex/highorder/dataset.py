@@ -13,7 +13,7 @@ import requests
 cdata = {
     'pacs' : '/usr/data/hoi/APS_pacs/pacs.hdf5',
     'hgdataset' : '/usr/data/hoi/HGDataset.hdf5',
-    
+
 }
 
 def download_file_from_google_drive(id, destination, filesize=576435294):
@@ -469,4 +469,11 @@ def cluster_data(dataname = None):
     if dataname is None:
         for i in cdata:
             print(i)
+    else:
+        try:
+            data = HGDataset(cdata[dataname])
+        except:
+            data = HGData(cdata[dataname])
+        
+        return data
         
