@@ -9,6 +9,13 @@ import pkg_resources
 ####################### google drive download
 import requests
 
+# data url for dataset
+cdata = {
+    'pacs' : '/usr/data/hoi/APS_pacs/pacs.hdf5',
+    'hgdataset' : '/usr/data/hoi/HGDataset.hdf5',
+    
+}
+
 def download_file_from_google_drive(id, destination, filesize=576435294):
     def get_confirm_token(response):
         for key, value in response.cookies.items():
@@ -201,7 +208,7 @@ def merge_hdf5(path, output_name = 'dataset.hdf5'):
 
 
 class HGData_: ## controls a single h5groups 
-    def __init__(self, obj, readonly = False):
+    def __init__(self, obj, readonly = True):
         self.hdf5 = obj
     
     def lengths(self):
@@ -237,7 +244,7 @@ class HGData_: ## controls a single h5groups
 
 
 class HGData: ## data + time is consist of whole dataset
-    def __init__(self, obj, readonly = False):
+    def __init__(self, obj, readonly = True):
         self.mode = 'r' if readonly else 'r+'
         self._standalone = False
         if isinstance(obj, h5py.Group) or isinstance(obj, h5py.File):
@@ -392,7 +399,7 @@ class HGData: ## data + time is consist of whole dataset
         return facets
 
 class HGDataset: 
-    def __init__(self, file, readonly = False):
+    def __init__(self, file, readonly = True):
         self.mode = 'r' if readonly else 'r+'
         self.hdf5 = h5py.File(file, self.mode)
         for datum in self.hdf5:
@@ -457,5 +464,9 @@ def from_google_drive(path = '.', readonly = True):
         download_file_from_google_drive('1DDGvonWKGQ8LIB22lKp2z511pymcXktr', filename)
     return HGDataset(filename, readonly)
 
-def get_pacs():
-    return HGData(pkg_resources.resource_filename('uos_complex', 'data/APS_pacs/pacs.hdf5'))
+
+def cluster_data(dataname = None):
+    if dataname is None:
+        for i in cdata:
+            print(i)
+        

@@ -109,7 +109,7 @@ def FF_corr(facet_dict, scatter = True):
     for node in ff_corr:
         corr+= ff_corr[node]
     corr /= sum(weight)
-    plt.scatter(*pairs.T, s = weight, label = f'corr. = {corr}')
+    plt.scatter(*pairs.T, s = np.log10(weight)+1, label = f'corr. = {corr}')
     plt.legend()
     return corr, ff_pair
 
