@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from numba import njit
+from numba.typed import Dict, List
 
 def disparity1(facet_dict):
     """Measure disparity of a given facet distribution.
@@ -67,12 +68,19 @@ def disparity2(facet_dict):
     return disp
 
 @njit
-def _FFcor(flist):
+def _FFcor(flist, fdict = None):
     ret = 0
-    for i, f1 in enumerate(flist):
-        for j, f2 in enumerate(flist):
-            if i>j:
-                ret += 2*(f1==f2) -1
+    if fdict is None:
+        for i, f1 in enumerate(flist):
+            for j, f2 in enumerate(flist):
+                if i>j:
+                    ret += 2*(f1==f2) -1
+    else:
+        for i, f1 in enumerate(flist):
+            for j, f2 in enumerate(flist):
+                if i>j:
+                    ret += 2*(f1==f2) -1
+                    fdict[f1,f2] = fdict.get((f1,f2),0)+1
     return ret
 
 
@@ -95,11 +103,11 @@ def FF_corr(facet_dict, skip_scatter = False):
 
     """    
     ff_corr = {}
-    ff_pair = {}
+    ff_pair = Dict()
     tot_corr = 0
     tot_N = 0
     for node in tqdm(facet_dict):
-        fs = []
+        fs = List()
         for facet in facet_dict[node]:
             fs.append(len(facet)-1) # gathering all of facet sizes of target node.
         
@@ -107,14 +115,10 @@ def FF_corr(facet_dict, skip_scatter = False):
             tot_corr += _FFcor(fs)
             tot_N += (len(fs)-1)*(len(fs))/2
             continue
-        corr=0
-        for i in fs:
-            for j in fs:
-                ff_pair[i,j] = ff_pair.get((i,j), 0) + 1
-                corr += 2*(i==j) -1 # 1 if i == j else -1
-            corr -= 1
-            ff_pair[i,i] -= 1 # remove self correlation
-        ff_corr[node] = corr
+        else:
+            corr = _FFcor(fs, ff_pair)
+            ff_corr[node] = corr
+
     if skip_scatter:
         return tot_corr/tot_N
 
