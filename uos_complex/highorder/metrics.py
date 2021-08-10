@@ -104,6 +104,8 @@ def FF_corr(facet_dict, skip_scatter = False):
     """    
     ff_corr = {}
     ff_pair = Dict()
+    ff_pair[1,1] = 1 # type set of numba typed Dict
+    del ff_pair[1,1] # remove dummy data
     tot_corr = 0
     tot_N = 0
     for node in tqdm(facet_dict):
