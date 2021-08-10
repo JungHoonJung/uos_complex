@@ -352,11 +352,11 @@ class HGData: ## data + time is consist of whole dataset
                     else:
                         for face in faces:
                             if len(simpset - face) == 0: #if there is larger than this one 
-                                nfacet = True            #(i.e. this is a one of the face of an exist facet.)
+                                facet = False            #(i.e. this is a one of the face of an exist facet.)
                             break
-                    if nfacet:
+                    if not facet:
                         break
-                if not nfacet:
+                if facet:
                     for node in simp: 
                         faces = facets[node]
                         faces.append(simpset)
@@ -382,11 +382,11 @@ class HGData: ## data + time is consist of whole dataset
                 else:
                     for face in faces:
                         if len(simpset - face) == 0: #if there is larger than this one 
-                            nfacet = True            #(i.e. this is a one of the face of an exist facet.)
+                            facet = False            #(i.e. this is a one of the face of an exist facet.)
                         break
-                if nfacet:
+                if not facet:
                     break
-            if not nfacet:
+            if facet:
                 for node in simp: 
                     faces = facets[node]
                     faces.append(simpset)
