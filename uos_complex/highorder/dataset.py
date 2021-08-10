@@ -343,17 +343,16 @@ class HGData: ## data + time is consist of whole dataset
                     continue
                 simps.add(simp)
 
-                facet  = False
-                nfacet  = False
+                facet  = True
+                #nfacet  = False
                 for node in simp: 
                     faces = facets.get(node, [])
                     if not faces or facet:
-                        facet = True
-                        break
+                        break # this hyperedge is facet
                     else:
                         for face in faces:
-                            if len(simpset - face) == 0:
-                                nfacet = True
+                            if len(simpset - face) == 0: #if there is larger than this one 
+                                nfacet = True            #(i.e. this is a one of the face of an exist facet.)
                             break
                     if nfacet:
                         break
@@ -362,7 +361,6 @@ class HGData: ## data + time is consist of whole dataset
                         faces = facets[node]
                         faces.append(simpset)
                         facets[node] = faces
-        print(self.name)
         return facets
 
     def get_clique_complex(self):    
@@ -375,22 +373,20 @@ class HGData: ## data + time is consist of whole dataset
                 continue
             simps.add(simp)
 
-            facet  = False
-            nfacet  = False
+            facet  = True
+            #nfacet  = False
             for node in simp: 
                 faces = facets.get(node, [])
                 if not faces or facet:
-                    faces.append(simpset)
-                    facet = True
-                    facets[node] = faces
+                    break # this hyperedge is facet
                 else:
                     for face in faces:
-                        if len(simpset - face) == 0:
-                            nfacet = True
+                        if len(simpset - face) == 0: #if there is larger than this one 
+                            nfacet = True            #(i.e. this is a one of the face of an exist facet.)
                         break
                 if nfacet:
                     break
-            if not facet and not nfacet:
+            if not nfacet:
                 for node in simp: 
                     faces = facets[node]
                     faces.append(simpset)
