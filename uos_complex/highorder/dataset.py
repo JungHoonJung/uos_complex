@@ -1,7 +1,7 @@
 import subprocess, os, gzip, h5py
 import numpy as np
 import networkx as nx
-from tqdm.auto import tqdm
+from tqdm import tqdm
 import pkg_resources
 #from .metrics import *
 

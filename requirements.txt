@@ -4,3 +4,4 @@ tqdm
 pandas
 networkx
 h5py
+numba
