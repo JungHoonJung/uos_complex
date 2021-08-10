@@ -349,6 +349,7 @@ class HGData: ## data + time is consist of whole dataset
                     faces = facets.get(node, [])
                     if not faces or facet:
                         facet = True
+                        break
                     else:
                         for face in faces:
                             if len(simpset - face) == 0:
@@ -356,7 +357,7 @@ class HGData: ## data + time is consist of whole dataset
                             break
                     if nfacet:
                         break
-                if not facet and not nfacet:
+                if not nfacet:
                     for node in simp: 
                         faces = facets[node]
                         faces.append(simpset)
