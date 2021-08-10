@@ -348,9 +348,7 @@ class HGData: ## data + time is consist of whole dataset
                 for node in simp: 
                     faces = facets.get(node, [])
                     if not faces or facet:
-                        faces.append(simpset)
                         facet = True
-                        facets[node] = faces
                     else:
                         for face in faces:
                             if len(simpset - face) == 0:
