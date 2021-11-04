@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 from tqdm import tqdm
 import pkg_resources
+
 #from .metrics import *
 
 
@@ -13,7 +14,6 @@ import requests
 cdata = {
     'pacs' : '/usr/data/hoi/APS_pacs/pacs.hdf5',
     'hgdataset' : '/usr/data/hoi/HGDataset.hdf5',
-
 }
 
 def download_file_from_google_drive(id, destination, filesize=576435294):
@@ -329,7 +329,7 @@ class HGData: ## data + time is consist of whole dataset
         """Get nerve complex
 
         Returns:
-            [type]: [description]
+            [type]: Dictionary which has (node - List of simplex(List)) as a key - value pair.
         """        
         k = [int(ks) for ks in self]
         k.sort(reverse= True)
@@ -352,7 +352,7 @@ class HGData: ## data + time is consist of whole dataset
                     else:
                         for face in faces:
                             if len(simpset - face) == 0: #if there is larger than this one 
-                                facet = False            #(i.e. this is a one of the face of an exist facet.)
+                                facet = False            #(i.e. this is a one of the face of an existing facet.)
                             break
                     if not facet:
                         break
@@ -382,7 +382,7 @@ class HGData: ## data + time is consist of whole dataset
                 else:
                     for face in faces:
                         if len(simpset - face) == 0: #if there is larger than this one 
-                            facet = False            #(i.e. this is a one of the face of an exist facet.)
+                            facet = False            #(i.e. this is a one of the face of an existing facet.)
                         break
                 if not facet:
                     break
@@ -472,3 +472,4 @@ def cluster_data(dataname = None):
         
         return data
         
+

@@ -49,8 +49,8 @@ def edge_weight_percolation(network : nx.Graph, order, connecting = 'strong') ->
         strong = False
         raise Warning("Undirected graph cannot be operated on strongly connected component. Weakly connected component will be calculated.")
 
-    edges = np.array([[wt,u,v] for (u,v, wt) in network.edges.data(weight_name)])   # container for sorting
-    order = np.argsort(edges[:,0])                                                  # sort by weight
+    edges = np.array([[wt,u,v] for (u,v, wt) in network.edges.data(order)])   # container for sorting
+    #order = np.argsort(edges[:,0])                                                  # sort by weight
 
     class cluster:
         def __init__(self, data):
