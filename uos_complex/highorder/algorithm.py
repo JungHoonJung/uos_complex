@@ -284,12 +284,13 @@ def local_connectivity(facets, simps):
         res[s] = 0
         sset = Dict.empty(int64, int64)
         for node in simps[s+1]:
-            ch =False
+            ch =True and len(facets[node])>1
             for simplex in facets[node]:
                 if simplex ==s+1: continue
                 if sset.get(simplex , 0) == 0:
-                    ch = True
                     sset[simplex] = 1
+                else:
+                    ch = False
             if ch:
                 res[s] +=1
 
